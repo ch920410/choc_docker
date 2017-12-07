@@ -1,0 +1,59 @@
+version : '3'
+services :
+    mysql :
+        build :
+            context : ~/Workspace/docker/mysql
+            dockerfile : Dockerfile
+        ports :
+            - "3306:3306"
+        volumes :
+            - ~/Workspace/docker/mysql/log:/var/log/mysql
+            - ~/Workspace/docker/mysql/data:/var/lib/mysql
+            - ~/Workspace/docker/mysql/etc/my.cnf:/etc/mysql/my.cnf:ro
+        environment :
+            - MYSQL_ROOT_PASSWORD=123456
+        container_name : mysql
+        restart : always
+    php7 :
+        build :
+            context : ~/Workspace/docker/php7
+            dockerfile : Dockerfile
+        ports :
+            - "9000:9000"
+        volumes :
+            - ~/Workspace/code:/var/www
+            - ~/Workspace/docker/php7/log:/var/log/php-fpm
+            - ~/Workspace/docker/php7/etc:/usr/local/php7/etc:ro
+        container_name : php7
+        links :
+            - mysql
+            - redis
+        restart : always
+    nginx :
+        build :
+            context : ~/Workspace/docker/nginx
+            dockerfile : Dockerfile
+        ports :
+            - "80:80"
+            - "443:443"
+        volumes :
+            - ~/Workspace/code:/var/www
+            - ~/Workspace/docker/nginx/log:/var/log/nginx
+            - ~/Workspace/docker/nginx/conf/vhost:/usr/local/nginx/conf/vhost:ro
+            - ~/Workspace/docker/nginx/conf/nginx.conf:/usr/local/nginx/conf/nginx.conf:ro
+        container_name : nginx
+        links :
+            - php7
+        restart : always
+    redis :
+        build :
+            context : ~/Workspace/docker/redis
+            dockerfile : Dockerfile
+        ports :
+            - "6379:6379"
+        volumes :
+            - ~/Workspace/docker/redis/data:/data
+            - ~/Workspace/docker/redis/log:/var/log/redis
+            - ~/Workspace/docker/redis/etc/redis.conf:/usr/local/etc/redis/redis.conf:ro
+        container_name : redis
+        restart: always
