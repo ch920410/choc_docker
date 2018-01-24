@@ -7,6 +7,7 @@ services :
         ports :
             - "3306:3306"
         volumes :
+            - ~/Download:/var/download
             - ~/Workspace/docker/mysql/log:/var/log/mysql
             - ~/Workspace/docker/mysql/data:/var/lib/mysql
             - ~/Workspace/docker/mysql/etc/my.cnf:/etc/mysql/my.cnf:ro
@@ -20,8 +21,10 @@ services :
             dockerfile : Dockerfile
         ports :
             - "9000:9000"
+            - "9501:9501"
+            - "9502:9502"
         volumes :
-            - ~/Workspace/code:/var/www
+            - ~/Workspace/project:/var/www
             - ~/Workspace/docker/php7/log:/var/log/php-fpm
             - ~/Workspace/docker/php7/etc:/usr/local/php7/etc:ro
         container_name : php7
@@ -35,9 +38,11 @@ services :
             dockerfile : Dockerfile
         ports :
             - "80:80"
+            - "8001:8001"
+            - "8002:8002"
             - "443:443"
         volumes :
-            - ~/Workspace/code:/var/www
+            - ~/Workspace/project:/var/www
             - ~/Workspace/docker/nginx/log:/var/log/nginx
             - ~/Workspace/docker/nginx/conf/vhost:/usr/local/nginx/conf/vhost:ro
             - ~/Workspace/docker/nginx/conf/nginx.conf:/usr/local/nginx/conf/nginx.conf:ro

@@ -102,6 +102,9 @@ RUN php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.ph
     php -r "unlink('composer-setup.php');" && \
     mv composer.phar /usr/local/bin/composer
 
-EXPOSE 9000
+RUN pecl install yaf
+RUN pecl install swoole
+
+EXPOSE 9000 
 
 ENTRYPOINT ["/usr/local/php7/sbin/php-fpm", "-F", "-c", "/usr/local/php7/etc/php.ini"]
